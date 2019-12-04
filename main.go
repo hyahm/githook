@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
@@ -22,28 +20,13 @@ func shell(cmd string) ([]byte, error){
 }
 
 func hook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set(header,token)
 	if r.Method == http.MethodPost {
-		d := &data{}
-		b,err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		err = json.Unmarshal(b, d)
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-		}
-		c := fmt.Sprintf("cd %s && %s", d.Dir, d.Command)
+		c := fmt.Sprintf("cd %s && sudo -u %s git %s", dir, user, cmd)
 		out, _ := shell(c)
-
 		w.Write(out)
 		return
 	} else if r.Method == http.MethodGet {
-		dir := r.FormValue("dir")
-		cmd := r.FormValue("cmd")
-		user := r.FormValue("user")
 		c := fmt.Sprintf("cd %s && sudo -u %s git %s", dir, user, cmd)
 		out, _ := shell(c)
 
@@ -57,10 +40,20 @@ func hook(w http.ResponseWriter, r *http.Request) {
 
 var addr string
 var sh string
+var header string
+var token string
+var user string
+var cmd string
+var dir string
 
 func init() {
 	flag.StringVar(&addr, "l", ":10009", "listen address; like :10009")
 	flag.StringVar(&sh, "s", "/bin/bash", "bash path")
+	flag.StringVar(&header, "h", "X-Gitlab-Token", "header")
+	flag.StringVar(&token, "t", "123456", "token")
+	flag.StringVar(&cmd, "c", "pull", "cmd pull")
+	flag.StringVar(&user, "u", "root", "cmd pull")
+	flag.StringVar(&dir, "d", "/var/www/test", "dir name")
 }
 
 func main() {
