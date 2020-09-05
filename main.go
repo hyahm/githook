@@ -25,6 +25,7 @@ func hook(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+	golog.Info(string(b))
 	jf := &JsonFile{}
 	err = json.Unmarshal(b, &jf)
 	if err != nil {
@@ -33,6 +34,7 @@ func hook(w http.ResponseWriter, r *http.Request) {
 	}
 	out, err := jf.shell()
 	if err != nil {
+		golog.Error(err)
 		w.Write([]byte(err.Error()))
 		return
 	}
@@ -69,8 +71,7 @@ func main() {
 	router.SetHeader("Access-Control-Allow-Origin", "*")
 	router.SetHeader("Content-Type", "application/x-www-form-urlencoded,application/json; charset=UTF-8")
 	router.SetHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,X-Token,smail,X-Gitlab-Token")
-	router.Post("/post/{filename}", hook)
-	router.Get("/get/{filename}", hook)
+	router.Post("/{filename}", hook)
 	golog.Info("listen on ", goconfig.ReadString("server.listen", ":10009"))
 	err = router.Run(goconfig.ReadString("server.listen", ":10009"))
 	if err != nil {
