@@ -35,6 +35,7 @@ func hook(w http.ResponseWriter, r *http.Request) {
 	out, err := jf.shell()
 	if err != nil {
 		golog.Error(err)
+		golog.Error(string(out))
 		w.Write([]byte(err.Error()))
 		return
 	}
