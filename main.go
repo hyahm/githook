@@ -18,7 +18,10 @@ import (
 func hook(w http.ResponseWriter, r *http.Request) {
 	golog.Info(r.Method)
 	token := r.Header.Get("X-Gitlab-Token")
-	golog.Info(token)
+	if token != goconfig.ReadString("token.gitlab", "123456") {
+		w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+		return
+	}
 	filename := xmux.Var(r)["filename"]
 	b, err := ioutil.ReadFile(filepath.Join(goconfig.ReadString("server.jsondir"), filename))
 	if err != nil {
