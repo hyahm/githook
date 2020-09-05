@@ -42,14 +42,14 @@ func hook(w http.ResponseWriter, r *http.Request) {
 }
 
 type JsonFile struct {
-	User    string
-	Command string
-	Dir     string
-	Shell   string
+	User    string `json:"user"`
+	Command string `json:"command"`
+	Dir     string `json:"dir"`
+	Shell   string `json:"shell"`
 }
 
 func (jf *JsonFile) shell() ([]byte, error) {
-	c := exec.Command(jf.Shell, "-c", fmt.Sprintf("cd %s && sudo -u %s git %s", jf.Dir, jf.User, jf.Command))
+	c := exec.Command(jf.Shell, "-c", fmt.Sprintf("cd %s && sudo -u %s %s", jf.Dir, jf.User, jf.Command))
 	return c.CombinedOutput()
 }
 
