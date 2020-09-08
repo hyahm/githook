@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 
 	"github.com/hyahm/goconfig"
 	"github.com/hyahm/golog"
@@ -76,10 +77,14 @@ func main() {
 	router.SetHeader("Access-Control-Allow-Origin", "*")
 	router.SetHeader("Content-Type", "application/x-www-form-urlencoded,application/json; charset=UTF-8")
 	router.SetHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,X-Token,smail,X-Gitlab-Token")
-	router.Post("/{filename}", hook)
+	router.Post("/post/{filename}", hook)
+	router.Post("/get/{filename}", hook)
 	golog.Info("listen on ", goconfig.ReadString("server.listen", ":10009"))
-	err = router.Run(goconfig.ReadString("server.listen", ":10009"))
-	if err != nil {
-		log.Fatal(err)
+	svc := &http.Server{
+		Addr:        goconfig.ReadString("server.listen", ":10009"),
+		Handler:     router,
+		ReadTimeout: goconfig.ReadDuration("server.readtimeout", time.Second*30),
 	}
+	log.Fatal(svc.ListenAndServe())
+
 }
