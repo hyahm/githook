@@ -80,6 +80,7 @@ func main() {
 	router.Post("/post/{filename}", hook)
 	router.Post("/get/{filename}", hook)
 	golog.Info("listen on ", goconfig.ReadString("server.listen", ":10009"))
+	golog.Info(goconfig.ReadDuration("server.readtimeout", time.Second*30))
 	svc := &http.Server{
 		Addr:        goconfig.ReadString("server.listen", ":10009"),
 		Handler:     router,
