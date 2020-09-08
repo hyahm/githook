@@ -77,8 +77,7 @@ func main() {
 	router.SetHeader("Access-Control-Allow-Origin", "*")
 	router.SetHeader("Content-Type", "application/x-www-form-urlencoded,application/json; charset=UTF-8")
 	router.SetHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,X-Token,smail,X-Gitlab-Token")
-	router.Post("/post/{filename}", hook)
-	router.Post("/get/{filename}", hook)
+	router.Post("/{filename}", hook)
 	golog.Info("listen on ", goconfig.ReadString("server.listen", ":10009"))
 	golog.Info(goconfig.ReadDuration("server.readtimeout", time.Second*30))
 	svc := &http.Server{
