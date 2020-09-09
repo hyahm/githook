@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/hyahm/goconfig"
@@ -58,10 +59,20 @@ type JsonFile struct {
 
 func (jf *JsonFile) shell() ([]byte, error) {
 	var c *exec.Cmd
+	arg := "-c"
+	if jf.Shell == "" {
+		jf.Shell = "/bin/bash"
+		if runtime.GOOS == "windows" {
+			arg = "/c"
+			jf.Shell = "powershell"
+			jf.User = ""
+		}
+	}
+
 	if jf.User == "" {
-		c = exec.Command(jf.Shell, "-c", jf.Command)
+		c = exec.Command(jf.Shell, arg, jf.Command)
 	} else {
-		c = exec.Command(jf.Shell, "-c", fmt.Sprintf("sudo -u %s %s", jf.User, jf.Command))
+		c = exec.Command(jf.Shell, arg, fmt.Sprintf("sudo -u %s %s", jf.User, jf.Command))
 	}
 
 	c.Dir = jf.Dir
