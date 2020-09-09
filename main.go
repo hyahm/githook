@@ -57,7 +57,15 @@ type JsonFile struct {
 }
 
 func (jf *JsonFile) shell() ([]byte, error) {
-	c := exec.Command(jf.Shell, "-c", fmt.Sprintf("cd %s && sudo -u %s %s", jf.Dir, jf.User, jf.Command))
+	var c *exec.Cmd
+	if jf.User == "" {
+		c = exec.Command(jf.Shell, "-c", jf.Command)
+	} else {
+		c = exec.Command(jf.Shell, "-c", fmt.Sprintf("sudo -u %s %s", jf.User, jf.Command))
+	}
+
+	c.Dir = jf.Dir
+
 	return c.CombinedOutput()
 }
 

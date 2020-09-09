@@ -5,6 +5,8 @@ github.com/hyahm/golog v0.0.0-20200903091725-fb6aa179364d h1:PWGzsKLekq2dHioTfM2
 github.com/hyahm/golog v0.0.0-20200903091725-fb6aa179364d/go.mod h1:zKiO0JeV7UoTS6Gx7jZaGr+GblF6B57e04Q+/+ChEZA=
 github.com/hyahm/xmux v0.0.0-20200903093009-e56e6c1d0aa9 h1:9748mgw7QrAOvAMIgKchaAqugpelnv4f9iXGmnCJyus=
 github.com/hyahm/xmux v0.0.0-20200903093009-e56e6c1d0aa9/go.mod h1:UoEQtjCaA8OzZJPtmiflvZ+cFMlmZo7o7WSQ/VdkDmE=
+github.com/hyahm/xmux v0.0.0-20200905042735-cf09e9a5fef0 h1:RzMwGFst5UfNoSc/aMOtDyQXmWJTH95WI6wzyJQWugM=
+github.com/hyahm/xmux v0.0.0-20200905042735-cf09e9a5fef0/go.mod h1:UoEQtjCaA8OzZJPtmiflvZ+cFMlmZo7o7WSQ/VdkDmE=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.8 h1:obN1ZagJSUGI0Ek/LBmuj4SNLPfIny3KsKFopxRdj10=
 gopkg.in/yaml.v2 v2.2.8/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
