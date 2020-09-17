@@ -23,7 +23,12 @@ func GitHubHook(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 	filename := xmux.Var(r)["filename"]
-
+	x, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+	golog.Info(string(x))
 	b, err := ioutil.ReadFile(filepath.Join(goconfig.ReadString("server.jsondir"), filename))
 	if err != nil {
 		w.Write([]byte(err.Error()))
