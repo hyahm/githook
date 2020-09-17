@@ -18,9 +18,9 @@ func main() {
 		conf = os.Args[1]
 	}
 	goconfig.InitConf(conf, goconfig.INI)
-	_, err := os.Stat(goconfig.ReadString("server.jsondir"))
+	_, err := os.Stat(goconfig.ReadString("jsondir"))
 	if os.IsNotExist(err) {
-		if err = os.MkdirAll(goconfig.ReadString("server.jsondir"), 0755); err != nil {
+		if err = os.MkdirAll(goconfig.ReadString("jsondir"), 0755); err != nil {
 			log.Fatal(err)
 		}
 	}
