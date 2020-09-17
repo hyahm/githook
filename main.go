@@ -30,7 +30,7 @@ func main() {
 	router.Post("/gitlab/{filename}", app.GitLabHook).
 		SetHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,X-Token,X-Gitlab-Token")
 
-	router.Post("/githab/{filename}", app.GitHabHook)
+	router.Post("/github/{filename}", app.GitHabHook)
 	golog.Info("listen on ", goconfig.ReadString("server.listen", ":10009"))
 	golog.Info(goconfig.ReadDuration("server.readtimeout", time.Second*30))
 	svc := &http.Server{
