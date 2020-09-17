@@ -11,7 +11,7 @@ import (
 	"github.com/hyahm/xmux"
 )
 
-func GitHabHook(w http.ResponseWriter, r *http.Request) {
+func GitHubHook(w http.ResponseWriter, r *http.Request) {
 	golog.Info(r.Method)
 	token := r.Header.Get("X-Gitlab-Token")
 	if token != goconfig.ReadString("token.gitlab", "123456") {
