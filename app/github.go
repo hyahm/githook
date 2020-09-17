@@ -1,7 +1,10 @@
 package app
 
 import (
+	"crypto/hmac"
+	"crypto/sha1"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
@@ -17,18 +20,21 @@ func GitHubHook(w http.ResponseWriter, r *http.Request) {
 	for k, v := range r.Header {
 		golog.Infof("%s:%s\n", k, strings.Join(v, ","))
 	}
-	// token := r.Header.Get("X-Gitlab-Token")
-	// if token != goconfig.ReadString("token.gitlab", "123456") {
-	// 	w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-	// 	return
-	// }
-	filename := xmux.Var(r)["filename"]
+
 	x, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	golog.Info(string(x))
+	s := hmac.New(sha1.New, []byte(goconfig.ReadString("token.github", "123456")))
+	s.Write(x)
+	token := fmt.Sprintf("%x", s.Sum(nil))
+	golog.Info(token)
+	if "sha1="+token != r.Header.Get("X-Hub-Signature") {
+		w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+		return
+	}
+	filename := xmux.Var(r)["filename"]
 	b, err := ioutil.ReadFile(filepath.Join(goconfig.ReadString("server.jsondir"), filename))
 	if err != nil {
 		w.Write([]byte(err.Error()))
