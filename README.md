@@ -12,6 +12,9 @@ listen=:10009
 jsondir=json
 # 读取超时时间， 默认30s
 readtimeout=30s
+# gitee WebHook 密码
+# github secret
+# gitlab Secret Token
 token=123456
 ```
 
