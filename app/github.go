@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"strings"
 
 	"github.com/hyahm/goconfig"
 	"github.com/hyahm/golog"
@@ -13,6 +14,10 @@ import (
 
 func GitHubHook(w http.ResponseWriter, r *http.Request) {
 	golog.Info(r.Method)
+	for k, v := range r.Header {
+		golog.Info("%s:%s", k, strings.Join(v, ","))
+	}
+	golog.Info(r.Header)
 	token := r.Header.Get("X-Gitlab-Token")
 	if token != goconfig.ReadString("token.gitlab", "123456") {
 		w.WriteHeader(http.StatusNetworkAuthenticationRequired)
