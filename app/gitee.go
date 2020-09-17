@@ -6,13 +6,17 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"github.com/hyahm/goconfig"
 	"github.com/hyahm/golog"
 	"github.com/hyahm/xmux"
 )
 
-func GitHubHook(w http.ResponseWriter, r *http.Request) {
+func GiteeHook(w http.ResponseWriter, r *http.Request) {
+	for k, v := range r.Header {
+		golog.Infof("%s:%s\n", k, strings.Join(v, ","))
+	}
 
 	x, err := ioutil.ReadAll(r.Body)
 	if err != nil {

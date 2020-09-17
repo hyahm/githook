@@ -1,9 +1,22 @@
 # githook
 
+
 githook
 
-这个东西就是git 的钩子，每次push 会自动拉取代码, 暂时只做了gitlab
+这个东西就是git 的钩子，每次push 会自动拉取代码  
 
+# 配置文件
+hook.ini
+```
+listen=:10009
+jsondir=json
+# 读取超时时间， 默认30s
+readtimeout=30s
+token=123456
+```
+
+
+# json文件
 项目设置集成中， 填写url
 Secret Token： 默认123456，  配置文件可以修改
 

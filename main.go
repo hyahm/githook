@@ -32,13 +32,14 @@ func main() {
 		SetHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,X-Token,X-Gitlab-Token")
 
 	router.Post("/github/{filename}", app.GitHubHook)
+	router.Post("/gitee/{filename}", app.GiteeHook)
 
-	golog.Info("listen on ", goconfig.ReadString("server.listen", ":10009"))
-	golog.Info(goconfig.ReadDuration("server.readtimeout", time.Second*30))
+	golog.Info("listen on ", goconfig.ReadString("listen", ":10009"))
+	golog.Info(goconfig.ReadDuration("readtimeout", time.Second*30))
 	svc := &http.Server{
-		Addr:        goconfig.ReadString("server.listen", ":10009"),
+		Addr:        goconfig.ReadString("listen", ":10009"),
 		Handler:     router,
-		ReadTimeout: goconfig.ReadDuration("server.readtimeout", time.Second*30),
+		ReadTimeout: goconfig.ReadDuration("readtimeout", time.Second*30),
 	}
 	log.Fatal(svc.ListenAndServe())
 
