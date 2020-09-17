@@ -17,12 +17,13 @@ func GitHubHook(w http.ResponseWriter, r *http.Request) {
 	for k, v := range r.Header {
 		golog.Infof("%s:%s\n", k, strings.Join(v, ","))
 	}
-	token := r.Header.Get("X-Gitlab-Token")
-	if token != goconfig.ReadString("token.gitlab", "123456") {
-		w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-		return
-	}
+	// token := r.Header.Get("X-Gitlab-Token")
+	// if token != goconfig.ReadString("token.gitlab", "123456") {
+	// 	w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+	// 	return
+	// }
 	filename := xmux.Var(r)["filename"]
+
 	b, err := ioutil.ReadFile(filepath.Join(goconfig.ReadString("server.jsondir"), filename))
 	if err != nil {
 		w.Write([]byte(err.Error()))
