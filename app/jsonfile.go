@@ -59,5 +59,6 @@ func pull(filename string) []byte {
 		golog.Error(err)
 		return []byte(err.Error())
 	}
+	golog.Info(string(out))
 	return out
 }
