@@ -1,8 +1,10 @@
 package app
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
@@ -19,7 +21,24 @@ type JsonFile struct {
 	Shell   string `json:"shell"`
 }
 
-func (jf *JsonFile) shell() ([]byte, error) {
+func read(rc io.ReadCloser, iserr bool) {
+	br := bufio.NewReader(rc)
+	for {
+		line, _, err := br.ReadLine()
+		if err != nil {
+			return
+		}
+		if iserr {
+			golog.Error(line)
+		} else {
+			golog.Info(line)
+		}
+
+	}
+
+}
+
+func (jf *JsonFile) shell() error {
 	var c *exec.Cmd
 	arg := "-c"
 	if jf.Shell == "" {
@@ -36,29 +55,43 @@ func (jf *JsonFile) shell() ([]byte, error) {
 	} else {
 		c = exec.Command(jf.Shell, arg, fmt.Sprintf("sudo -u %s %s", jf.User, jf.Command))
 	}
-
 	c.Dir = jf.Dir
+	sep, err := c.StderrPipe()
+	if err != nil {
+		golog.Error(err)
+	}
+	go read(sep, true)
+	sop, err := c.StdoutPipe()
+	if err != nil {
+		golog.Error(err)
+	}
+	go read(sop, false)
 
-	return c.CombinedOutput()
+	err = c.Start()
+	if err != nil {
+		golog.Error(err)
+	}
+
+	return c.Wait()
+	// return c.CombinedOutput()
 }
 
-func pull(filename string) []byte {
+func pull(filename string) error {
 
 	b, err := ioutil.ReadFile(filepath.Join(goconfig.ReadString("jsondir"), filename))
 	if err != nil {
-		return []byte(err.Error())
+		return err
 	}
 	golog.Info(string(b))
 	jf := &JsonFile{}
 	err = json.Unmarshal(b, &jf)
 	if err != nil {
-		return []byte(err.Error())
+		return err
 	}
-	out, err := jf.shell()
+	err = jf.shell()
 	if err != nil {
 		golog.Error(err)
-		return []byte(err.Error())
+		return err
 	}
-	golog.Info(string(out))
-	return out
+	return nil
 }

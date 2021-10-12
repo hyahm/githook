@@ -28,8 +28,8 @@ func GitHubHook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	filename := xmux.Var(r)["filename"]
-
-	w.Write(pull(filename))
-	return
-
+	err = pull(filename)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 }
