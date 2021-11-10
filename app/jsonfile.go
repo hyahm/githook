@@ -29,9 +29,9 @@ func read(rc io.ReadCloser, iserr bool) {
 			return
 		}
 		if iserr {
-			golog.Error(line)
+			golog.Error(string(line))
 		} else {
-			golog.Info(line)
+			golog.Info(string(line))
 		}
 
 	}
