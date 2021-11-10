@@ -18,6 +18,7 @@ func main() {
 	if len(os.Args) > 1 {
 		conf = os.Args[1]
 	}
+	golog.InitLogger(goconfig.ReadString("log"), 0, true, time.Hour*24*30)
 	goconfig.InitConf(conf, goconfig.INI)
 	_, err := os.Stat(goconfig.ReadString("jsondir"))
 	if os.IsNotExist(err) {
