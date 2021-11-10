@@ -17,6 +17,7 @@ import (
 type JsonFile struct {
 	User    string `json:"user"`
 	Command string `json:"command"`
+	After   string `json:"after"`
 	Dir     string `json:"dir"`
 	Shell   string `json:"shell"`
 }
@@ -39,6 +40,16 @@ func read(rc io.ReadCloser, iserr bool) {
 }
 
 func (jf *JsonFile) shell() error {
+	err := jf.cmd(jf.Command)
+	if err != nil {
+		return err
+	}
+	go jf.cmd(jf.After)
+	return nil
+	// return c.CombinedOutput()
+}
+
+func (jf *JsonFile) cmd(cmd string) error {
 	var c *exec.Cmd
 	arg := "-c"
 	if jf.Shell == "" {
@@ -51,9 +62,9 @@ func (jf *JsonFile) shell() error {
 	}
 
 	if jf.User == "" {
-		c = exec.Command(jf.Shell, arg, jf.Command)
+		c = exec.Command(jf.Shell, arg, cmd)
 	} else {
-		c = exec.Command(jf.Shell, arg, fmt.Sprintf("sudo -u %s %s", jf.User, jf.Command))
+		c = exec.Command(jf.Shell, arg, fmt.Sprintf("sudo -u %s %s", jf.User, cmd))
 	}
 	c.Dir = jf.Dir
 	sep, err := c.StderrPipe()
@@ -73,7 +84,6 @@ func (jf *JsonFile) shell() error {
 	}
 
 	return c.Wait()
-	// return c.CombinedOutput()
 }
 
 func pull(filename string) error {
