@@ -77,7 +77,7 @@ func (jf *JsonFile) cmd(cmd string) error {
 		golog.Error(err)
 	}
 	go read(sop, false)
-
+	golog.Info(c.Env)
 	err = c.Start()
 	if err != nil {
 		golog.Error(err)
