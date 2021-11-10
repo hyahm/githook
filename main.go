@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+	defer golog.Sync()
 	conf := "hook.ini"
 	if len(os.Args) > 1 {
 		conf = os.Args[1]
