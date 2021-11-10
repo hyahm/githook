@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -20,6 +21,7 @@ type JsonFile struct {
 	After   string `json:"after"`
 	Dir     string `json:"dir"`
 	Shell   string `json:"shell"`
+	Env     string `json:"env"`
 }
 
 func read(rc io.ReadCloser, iserr bool) {
@@ -50,6 +52,7 @@ func (jf *JsonFile) shell() error {
 }
 
 func (jf *JsonFile) cmd(cmd string) error {
+
 	var c *exec.Cmd
 	arg := "-c"
 	if jf.Shell == "" {
@@ -77,7 +80,7 @@ func (jf *JsonFile) cmd(cmd string) error {
 		golog.Error(err)
 	}
 	go read(sop, false)
-	golog.Info(c.Env)
+	c.Env = os.Environ()
 	err = c.Start()
 	if err != nil {
 		golog.Error(err)
