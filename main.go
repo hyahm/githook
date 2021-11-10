@@ -31,11 +31,11 @@ func main() {
 	router.SetHeader("Access-Control-Allow-Origin", "*")
 	router.SetHeader("Content-Type", "application/x-www-form-urlencoded,application/json; charset=UTF-8")
 
-	router.Post("/gitlab/{filename}", app.GitLabHook).
+	router.Post("/gitlab/{string:filename}", app.GitLabHook).
 		SetHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,X-Token,X-Gitlab-Token")
 
-	router.Post("/github/{filename}", app.GitHubHook)
-	router.Post("/gitee/{filename}", app.GiteeHook)
+	router.Post("/github/{string:filename}", app.GitHubHook)
+	router.Post("/gitee/{string:filename}", app.GiteeHook)
 
 	golog.Info("listen on ", goconfig.ReadString("listen", ":10009"))
 	golog.Info(goconfig.ReadDuration("readtimeout", time.Second*30))
